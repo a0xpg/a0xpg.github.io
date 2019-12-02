@@ -11,16 +11,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
-<script>
-    (function(){
-        if(''){
-            if (prompt('请输入文章密码') !== ''){
-                alert('密码错误！');
-                history.back();
-            }
-        }
-    })();
-</script>
 
 
   
@@ -521,24 +511,46 @@
       
         
           
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ hexo server</span></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ hexo generate</span></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-<p>tags:</p>
-<ul>
-<li>Web安全</li>
-</ul>
-
+            <script src=/js/crypto-js.js></script>
+<script>
+function doDecrypt (pwd, onError) {
+	console.log('in doDecrypt');
+	const txt = document.getElementById('enc_content').innerHTML;
+	let plantext;
+	try {
+		const bytes = CryptoJS.AES.decrypt(txt, pwd);
+		var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+	} catch(err) {
+		if(onError) {
+			onError(err);
+		}
+		return;
+	}
+	document.getElementById('enc_content').innerHTML = plaintext;
+	document.getElementById('enc_content').style.display = 'block';
+	document.getElementById('enc_passwd').style.display = 'none';
+	if(typeof MathJax !== 'undefined') {
+		MathJax.Hub.Queue(
+			['resetEquationNumbers', MathJax.InputJax.TeX],
+			['PreProcess', MathJax.Hub],
+			['Reprocess', MathJax.Hub]
+		);
+	}
+}
+</script>
+<div id="enc_content" style="display:none">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</div>
+<div id="enc_passwd"> <input id="enc_pwd_input" type="password" style="border-radius: 5px;border-style: groove;height: 30px;width: 50%;cursor: auto;font-size: 102%;color: currentColor;outline: none;text-overflow: initial;padding-left: 5px;" onkeydown="if (event.keyCode == 13) { decrypt(); return false;}"> <input type="submit" value="解&nbsp;密" onclick="decrypt()" style="width: 58px;height: 34px;border-radius: 5px;background-color: white;border-style: solid;color: currentColor;"><div id="enc_error" style="display: inline-block;color: #d84527;margin-left: 10px"></div>
+<script>
+var onError = function(error) {
+	document.getElementById("enc_error").innerHTML = "password error!"
+};
+function decrypt() {
+var passwd = document.getElementById("enc_pwd_input").value;
+console.log(passwd);
+doDecrypt(passwd, onError);
+}
+</script>
+</div>
           
         
       
@@ -909,5 +921,5 @@
 
   
 
-<script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"live2d-widget-model-wanko"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false,"tagMode":false});</script><script>!function(e){var c=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){for(var r=0;r<c.length;r++)t=c[r],0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=c[r];t=o,n=function(){c=c.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}i(),e.addEventListener("scroll",function(){var t,n;t=i,n=e,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)})}(this);</script></body>
 </html>
